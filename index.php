@@ -1,25 +1,10 @@
 <?php
 session_start();
 
-// if(!isset($_SESSION['page'])){
-//     $_SESSION['page'] = 'Accueil';
-// }
-  
+require_once 'utils/utils.php';
 require_once 'config/config.php';
 require_once 'functions/autoloaders.php';
-// session_start(); 
 require_once 'inc/head.php';
-
-// $pageWithoutSidebar = ['Accueil', 'Inscription', 'Connexion']; 
-// function loadSidebar($page, $pageWithoutSidebar) {
-//   return in_array($page, $pageWithoutSidebar);
-// }
-
-// if (!loadSidebar($_SESSION['page'], $pageWithoutSidebar)) {
-// require_once 'inc/sidebar.php';
-// }
-
-
 
 
 $ctrl = 'PersoAppController';

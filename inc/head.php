@@ -20,4 +20,3 @@
     </script>
 </head>
 <body class="bg-gray-100">
-    <!-- faire une ternaire sur le flex pour le rendre inactif sur la page index persoApp au départ  -->

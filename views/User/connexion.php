@@ -1,17 +1,23 @@
 <?php
-$page= 'Connexion'; 
-$pageWithoutSidebar = ['Accueil', 'Inscription', 'Connexion']; 
+$page = 'Connexion';
 
-function loadSidebar($page, $pageWithoutSidebar) {
-    return in_array($page, $pageWithoutSidebar);
+if (loadSidebar($_SESSION['page'])) {
+    require_once 'inc/sidebar.php';
 }
 
-if (!loadSidebar($_SESSION['page'], $pageWithoutSidebar)) {
-  require_once 'inc/sidebar.php';
-}
+
 ?>
 <div class="bg-gray-100 min-h-screen flex items-center justify-center">
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <?php if (ErrorHandler::hasErrors()): ?>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <?php foreach (ErrorHandler::getErrors() as $code => $message): ?>
+                    <p class="text-sm mb-2 last:mb-0">
+                        <?= htmlspecialchars($message) ?>
+                    </p>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
         <h1 class="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-sport to-nutrition text-transparent bg-clip-text">Connexion</h1>
         <form action="?ctrl=user&action=logIn" method="POST" class="space-y-4">
             <div>
@@ -44,10 +50,10 @@ if (!loadSidebar($_SESSION['page'], $pageWithoutSidebar)) {
         <div class="mt-6 text-center">
             <p class="text-sm text-gray-600">
                 Vous n'avez pas de compte ?
-                <a href="index.php?ctrl=user&action=registration" class="font-medium text-sport hover:text-sport/80">
+                <a href="index.php?ctrl=user&action=displayFormProfil" class="font-medium text-sport hover:text-sport/80">
                     S'inscrire
                 </a>
-                <a href="index.php?ctrl=user&action=connected">Go page d'accueil</a>
+                
             </p>
         </div>
     </div>

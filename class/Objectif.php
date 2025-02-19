@@ -2,38 +2,79 @@
 
 class Objectif extends CoreClass
 {
-    private int $id;
-    private string $label;
-    private bool $state;
+    private int $objectifId;
+    private ?string $objectifLabel;
+    private ?int $objectifLabelId;
+    private ?float $weightObjectif;
+    private ?int $workoutObjectifPerWeek;
+    private ?bool $objectifState;
+    private int $userId; 
 
-    
-    public function getId(): int
+    public function getObjectifId(): ?int
     {
-        return $this->id;
+        return $this->objectifId;
     }
 
-    public function getLabel(): string
+    public function getObjectifLabel(): ?string
     {
-        return $this->label;
+        return $this->objectifLabel;
+    }
+    public function getObjectifLabelId(): ?int
+    {
+        return $this->objectifLabelId;
     }
 
-    public function getState(): bool
+    public function getWeightObjectif(): ?float
     {
-        return $this->state;
+        return $this->weightObjectif;
     }
 
-    public function setId(int $id): void
+    public function getWorkoutObjectifPerWeek(): ?int
     {
-        $this->id = $id;
+        return $this->workoutObjectifPerWeek;
     }
 
-    public function setLabel(string $label): void
+    public function getObjectifState(): ?bool
     {
-        $this->label = $label;
+        return $this->objectifState;
+    }
+    public function getUserId(): int
+    {
+        return $this->userId;
     }
 
-    public function setState(bool $state): void
+    public function setObjectifId(?int $objectifId): void
     {
-        $this->state = $state;
+        $this->objectifId = $objectifId;
+    }
+
+    public function setObjectifLabel(?string $objectifLabel): void
+    {
+        $this->objectifLabel = $objectifLabel;
+    }
+
+    public function setObjectifLabelId(?int $objectifLabelId): void
+    {
+        $this->objectifLabelId = $objectifLabelId;
+    }
+
+    public function setWeightObjectif(?float $weightObjectif): void
+    {
+        $this->weightObjectif = $weightObjectif;
+    }
+
+    public function setWorkoutObjectifPerWeek(?int $workoutObjectifPerWeek): void
+    {
+        $this->workoutObjectifPerWeek = $workoutObjectifPerWeek;
+    }
+
+    public function setObjectifState(?bool $objectifState): void
+    {
+        $this->objectifState = $objectifState;
+    }
+
+    public function setUserId(int $userId): void
+    {
+        $this->userId = $userId;
     }
 }

@@ -1,19 +1,21 @@
 <?php
 $page = "formMealEdit";
-$pageWithoutSidebar = ['Accueil', 'Inscription', 'Connexion'];
-
-function loadSidebar($page, $pageWithoutSidebar)
-{
-    return in_array($page, $pageWithoutSidebar);
-}
-
-if (!loadSidebar($_SESSION['page'], $pageWithoutSidebar)) {
+if (loadSidebar($_SESSION['page'])) {
     require_once 'inc/sidebar.php';
 }
 ?>
 
 <div class="flex-grow p-8">
     <h1 class="text-3xl font-bold mb-8">Modifier le repas</h1>
+    <?php if (ErrorHandler::hasErrors()): ?>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <?php foreach (ErrorHandler::getErrors() as $code => $message): ?>
+                <p class="text-sm mb-2 last:mb-0">
+                    <?= htmlspecialchars($message) ?>
+                </p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
     <form action="?ctrl=meal&action=edit" method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <input type="hidden" name="meal_id" value="<?= $meal->getId() ?>">
@@ -58,7 +60,7 @@ if (!loadSidebar($_SESSION['page'], $pageWithoutSidebar)) {
             <?php endforeach ?>
         </div>
         <div class="mb-4">
-            <button type="button" id="add-food" class="bg-nutrition hover:bg-nutrition/80 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            <button type="button" id="add-food" class="btn border-solid border bg-white border-green-600 text-green-600 px-4 py-2 rounded hover:bg-nutrition hover:text-white transition-colors">
                 Ajouter un aliment
             </button>
         </div>
@@ -66,9 +68,7 @@ if (!loadSidebar($_SESSION['page'], $pageWithoutSidebar)) {
             <button class="bg-nutrition hover:bg-nutrition/80 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
                 Modifier le repas
             </button>
-            <button class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="reset">
-                Réinitialiser
-            </button>
+           
         </div>
     </form>
 </div>

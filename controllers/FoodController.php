@@ -15,39 +15,72 @@ class FoodController
         return $cleanData;
     }
 
-    public function index()
+    public function index() : void
     {
-        $modelFood = new FoodModel;
-        $dataFood = $modelFood->getAllFood();
-        
-        foreach ($dataFood as $data) {
-            $foods[] = new Food($data);
-        }
-
-        include './views/Food/foodAll.php';
-    }
-
-
-    public function displayFormFood()
-    {
-        if (isset($_GET['id'])) {
-
-            $idUrl = $_GET['id'];
-
+        if (isset($_SESSION[APP_TAG]['connected'])) {
             $modelFood = new FoodModel;
+            $dataFood = $modelFood->getAllFood();
 
-            $dataFood = $modelFood->getOneFood($idUrl);
-            $food = new Food($dataFood);
+            if (!empty($dataFood)) {
+                if (isset($dataFood[0]) && is_array($dataFood[0])) {
 
-            include './views/Food/formFood.php';
+                    foreach ($dataFood as $data) {
+                        $foods[] = new Food($data);
+                    }
+                    
+                } else {
+                    $foods[] = new Food($dataFood);
+                }
+            }
+
+            include './views/Food/foodAll.php';
         } else {
-
-            include './views/Food/formFood.php';
+            ErrorHandler::addError('auth', "Vous devez être connecté pour accéder à cette page.");
+            $errors = ErrorHandler::getErrors();
+            $_SESSION['errors'] = $errors;
+            header('Location: index.php?ctrl=user&action=displayFormConnexion');
+            exit;
         }
     }
 
-    public function add()
+
+    public function displayFormFood() : void
     {
+
+        if (isset($_SESSION['errors'])) {
+            foreach ($_SESSION['errors'] as $code => $message) {
+                ErrorHandler::addError($code, $message);
+            }
+            unset($_SESSION['errors']);
+        }
+
+        if (isset($_SESSION[APP_TAG]['connected'])) {
+            if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+
+
+                $idUrl = $_GET['id'];
+
+                $modelFood = new FoodModel;
+
+                $dataFood = $modelFood->getOneFood($idUrl);
+                $food = new Food($dataFood);
+
+                include './views/Food/formFood.php';
+            } else {
+
+                include './views/Food/formFood.php';
+            }
+        } else {
+            ErrorHandler::addError('auth', "Vous devez être connecté pour accéder à cette page.");
+            $_SESSION['errors'] = ErrorHandler::getErrors();
+            header('Location: index.php?ctrl=user&action=displayFormConnexion');
+            exit;
+        }
+    }
+
+    public function add() : void 
+    {
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $cleanData = $this->sanitizeAndValidateData($_POST);
@@ -62,21 +95,23 @@ class FoodController
                     $cleanData['calories']
                 );
 
-                if ($result !== false) {
+                if ($result === true) {
                     header('Location: index.php?ctrl=food&action=index');
                     exit();
                 } else {
                     throw new Exception("Erreur lors de l'ajout de l'aliment");
                 }
             } catch (Exception $e) {
-                $_SESSION['error'] = $e->getMessage();
+                ErrorHandler::addError('addFood', $e->getMessage());
+                $_SESSION['errors'] = ErrorHandler::getErrors();
                 header('Location: index.php?ctrl=food&action=displayFormFood');
                 exit();
             }
         }
     }
 
-    public function update()
+
+    public function update() : void 
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
             try {
@@ -115,29 +150,56 @@ class FoodController
         }
     }
 
-    public function search()
+    public function search() : void 
     {
+        if (isset($_SESSION[APP_TAG]['connected'])) {
         $userInput = '%' . $_GET['searchTerm'] . '%';
 
-        $foodModel = new FoodModel(); 
-        $datas = $foodModel->getFoodBySearch($userInput); 
+        $foodModel = new FoodModel();
+        $dataFood = $foodModel->getFoodBySearch($userInput);
 
-        foreach ($datas as $data) {
-            $foods[] = new Food($data);
-        }  
+        if (!empty($dataFood)) {
+            if (isset($dataFood[0]) && is_array($dataFood[0])) {
+
+                foreach ($dataFood as $data) {
+                    $foods[] = new Food($data);
+                }
+                
+            } else {
+                $foods[] = new Food($dataFood);
+            }
+        }
+       
 
         include './views/Food/foodAll.php';
-
+    }else {
+        ErrorHandler::addError('auth', "Vous devez être connecté pour accéder à cette option.");
+        $_SESSION['errors'] = ErrorHandler::getErrors();
+        header('Location: index.php?ctrl=user&action=displayFormConnexion');
+        exit;
+    }
     }
 
-    public function delete()
+    public function delete() : void 
     {
-        $idUrl = $_GET['id'];
-        $modelFood = new FoodModel;
-        $result = $modelFood->deleteFood($idUrl);
+        if (isset($_SESSION[APP_TAG]['connected'])) {
+            $idUrl = $_GET['id'];
+            $modelFood = new FoodModel;
+            $result = $modelFood->deleteFood($idUrl);
 
-        if ($result !== false) {
-            header('Location: index.php?ctrl=food&action=index');
+            if ($result !== false) {
+                header('Location: index.php?ctrl=food&action=index');
+            } else {
+                ErrorHandler::addError('delete', $e->getMessage());
+                $_SESSION['errors'] = ErrorHandler::getErrors();
+                header('Location: index.php?ctrl=food&action=displayFormFood');
+                exit();
+            }
+        } else {
+            ErrorHandler::addError('auth', "Vous devez être connecté pour accéder à cette option.");
+            $_SESSION['errors'] = ErrorHandler::getErrors();
+            header('Location: index.php?ctrl=user&action=displayFormConnexion');
+            exit;
         }
     }
 }
