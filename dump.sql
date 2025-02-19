@@ -24,11 +24,7 @@ INSERT INTO ROLE (rol_label) VALUES
 ('Utilisateur'),
 ('Administrateur');
 
--- Insertion des données dans la table USER
-INSERT INTO USER (use_firstname, use_lastname, use_email, use_birthday, use_town, use_sexe, rol_id) VALUES
-('Jean', 'Dupont', 'jean.dupont@email.com', '1990-05-15', 'Paris', TRUE, 1),
-('Marie', 'Martin', 'marie.martin@email.com', '1988-09-22', 'Lyon', FALSE, 1),
-('Admin', 'Système', 'admin@systeme.com', '1985-01-01', 'Marseille', TRUE, 2);
+
 
 -- Insertion des données dans la table HEALTHDATA
 INSERT INTO HEALTHDATA (hea_actualWeight, hea_height, hea_weightObjectif, hea_workoutObjectifPerWeek, use_id) VALUES
